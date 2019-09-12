@@ -75,7 +75,7 @@ fun dateStrToDigit(str: String): String {
 
     val parts = str.split(" ");
 
-    val mounthes: Map<String,Pair<Int,Int>> = mapOf ("января" to Pair(1,31) , "февраля" to Pair(2,28), "марта" to Pair(3, 31), "апреля" to Pair(4,30), "мая" to Pair(5,31),
+    val monthes: Map<String,Pair<Int,Int>> = mapOf ("января" to Pair(1,31) , "февраля" to Pair(2,28), "марта" to Pair(3, 31), "апреля" to Pair(4,30), "мая" to Pair(5,31),
             "июня" to Pair(6,30), "июля" to Pair(7,31), "августа" to Pair(8,31), "сентября" to Pair(9,30), "октября" to Pair(10,31), "ноября" to Pair(11,30), "декабря" to Pair(12,31))
 
     if (parts.size!=3) return  ""
@@ -84,18 +84,13 @@ fun dateStrToDigit(str: String): String {
     val mounthstr:String = parts.get(1);
     val year:Int = parts.get(2).toInt()
 
-    val dainmounth = mounthes[mounthstr]
+    val dainmonth = monthes[mounthstr]
 
-    if (dainmounth !=null) {
-        if (day<dainmounth.second){
-            return String.format("%02d.%02d.%04d", day, dainmounth.first, year)
-        } else {
-            return ""
+    if (dainmonth !=null) {
+        if (day<dainmonth.second){
+            return String.format("%02d.%02d.%04d", day, dainmonth.first, year)
         }
     }
-
-
-
     return ""
 }
 
@@ -123,7 +118,17 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+
+    val symboles = phone.toSet()
+    val specsymbol = "+-() "
+    val dig = '0'..'9'
+    for (s in symboles){
+        if ((s in specsymbol || s in dig) == false) return ""
+    }
+
+    return phone.replace(" ", "").replace("-", "").replace("(","").replace(")","")
+}
 
 /**
  * Средняя
