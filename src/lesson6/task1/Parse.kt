@@ -71,7 +71,33 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+
+    val parts = str.split(" ");
+
+    val mounthes: Map<String,Pair<Int,Int>> = mapOf ("января" to Pair(1,31) , "февраля" to Pair(2,28), "марта" to Pair(3, 31), "апреля" to Pair(4,30), "мая" to Pair(5,31),
+            "июня" to Pair(6,30), "июля" to Pair(7,31), "августа" to Pair(8,31), "сентября" to Pair(9,30), "октября" to Pair(10,31), "ноября" to Pair(11,30), "декабря" to Pair(12,31))
+
+    if (parts.size!=3) return  ""
+
+    val day:Int = parts.get(0).toInt()
+    val mounthstr:String = parts.get(1);
+    val year:Int = parts.get(2).toInt()
+
+    val dainmounth = mounthes[mounthstr]
+
+    if (dainmounth !=null) {
+        if (day<dainmounth.second){
+            return String.format("%02d.%02d.%04d", day, dainmounth.first, year)
+        } else {
+            return ""
+        }
+    }
+
+
+
+    return ""
+}
 
 /**
  * Средняя
