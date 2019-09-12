@@ -320,7 +320,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
 
     for (item in list){
         val result = number - item;
-        if (list.contains(result) == true){
+        if (list.contains(result)&&result!=item){
             return Pair(list.indexOf(item),list.indexOf(result))
         }
     }
