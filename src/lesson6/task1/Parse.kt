@@ -2,6 +2,9 @@
 
 package lesson6.task1
 
+import java.lang.IllegalArgumentException
+import kotlin.math.max
+
 /**
  * Пример
  *
@@ -49,12 +52,10 @@ fun main(args: Array<String>) {
         val seconds = timeStrToSeconds(line)
         if (seconds == -1) {
             println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        }
-        else {
+        } else {
             println("Прошло секунд с начала суток: $seconds")
         }
-    }
-    else {
+    } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
 }
@@ -75,19 +76,19 @@ fun dateStrToDigit(str: String): String {
 
     val parts = str.split(" ");
 
-    val monthes: Map<String,Pair<Int,Int>> = mapOf ("января" to Pair(1,31) , "февраля" to Pair(2,28), "марта" to Pair(3, 31), "апреля" to Pair(4,30), "мая" to Pair(5,31),
-            "июня" to Pair(6,30), "июля" to Pair(7,31), "августа" to Pair(8,31), "сентября" to Pair(9,30), "октября" to Pair(10,31), "ноября" to Pair(11,30), "декабря" to Pair(12,31))
+    val monthes: Map<String, Pair<Int, Int>> = mapOf("января" to Pair(1, 31), "февраля" to Pair(2, 28), "марта" to Pair(3, 31), "апреля" to Pair(4, 30), "мая" to Pair(5, 31),
+            "июня" to Pair(6, 30), "июля" to Pair(7, 31), "августа" to Pair(8, 31), "сентября" to Pair(9, 30), "октября" to Pair(10, 31), "ноября" to Pair(11, 30), "декабря" to Pair(12, 31))
 
-    if (parts.size!=3) return  ""
+    if (parts.size != 3) return ""
 
-    val day:Int = parts.get(0).toInt()
-    val mounthstr:String = parts.get(1);
-    val year:Int = parts.get(2).toInt()
+    val day: Int = parts.get(0).toInt()
+    val mounthstr: String = parts.get(1);
+    val year: Int = parts.get(2).toInt()
 
     val dainmonth = monthes[mounthstr]
 
-    if (dainmonth !=null) {
-        if (day<dainmonth.second){
+    if (dainmonth != null) {
+        if (day < dainmonth.second) {
             return String.format("%02d.%02d.%04d", day, dainmonth.first, year)
         }
     }
@@ -123,11 +124,11 @@ fun flattenPhoneNumber(phone: String): String {
     val symboles = phone.toSet()
     val specsymbol = "+-() "
     val dig = '0'..'9'
-    for (s in symboles){
+    for (s in symboles) {
         if ((s in specsymbol || s in dig) == false) return ""
     }
 
-    return phone.replace(" ", "").replace("-", "").replace("(","").replace(")","")
+    return phone.replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
 }
 
 /**
@@ -152,7 +153,31 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+
+    val parts = jumps.replace("+ ", "+,").replace("- ", "-,").replace("% ", "%,").split(",")
+    val map_jumps: MutableMap<Int, String> = mutableMapOf()
+
+    for (part in parts) {
+
+        val jump = part.split(" ");
+        if (jump.size != 2) continue
+
+        map_jumps.put(jump.get(0).toInt(), jump.get(1))
+
+    }
+
+    var max_jump: Int? = 0
+    if (map_jumps.size == 0) return -1
+    else {
+        max_jump = map_jumps.filter { it.value.contains("+") }.keys.maxBy { it }
+    }
+
+    if (max_jump != null) {
+        return max_jump
+    }
+    return -1
+}
 
 /**
  * Сложная
@@ -163,7 +188,47 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+
+    val parts = expression.replace(" +", ",+&").replace(" -", ",-&").replace(" ", "").split(",")
+
+    var result = 0;
+
+    for (part in parts) {
+
+        if (parts.indexOf(part) == 0) {
+
+            if (part.contains("-") || part.contains("+")) {
+                throw IllegalArgumentException("")
+            }
+
+            result = part.toInt();
+        } else {
+            val member: List<String> = part.split("&")
+
+            if (member.size == 2) {
+                val expr = member.get(0)
+                val digital_str = member.get(1)
+                try {
+
+                    digital_str.toInt()
+                } catch (e: IllegalArgumentException) {
+
+                    return throw IllegalArgumentException("")
+                }
+
+                val digital = digital_str.toInt()
+
+                when (expr) {
+                    "+" -> result += digital
+                    "-" -> result -= digital
+                }
+            }
+        }
+    }
+
+    return result
+}
 
 /**
  * Сложная
