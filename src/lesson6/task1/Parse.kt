@@ -241,26 +241,20 @@ fun plusMinus(expression: String): Int {
  */
 fun firstDuplicateIndex(str: String): Int {
 
-    val parts = str.split(" ")
-
+    val str_lowercase = str.toLowerCase()
+    val parts = str_lowercase.split(" ")
     var count = parts.size
     var result = ""
+
     while (count > 0){
 
         val cur_word = parts.get(parts.size-count) + if (count == 1) "" else " "
-        val cur_word2 = cur_word.toLowerCase() + cur_word.toLowerCase()
+        val cur_word2 = cur_word + cur_word
 
-        if ((result + cur_word2) in str.toLowerCase()) {
-
-            return str.toLowerCase().indexOf(cur_word2)
-
-        }
-
-        result = result + cur_word.toLowerCase()
+        if ((result + cur_word2) in str_lowercase) return str_lowercase.indexOf(cur_word2)
+        result += cur_word
         count -=1
-
     }
-
     return -1
 }
 
@@ -275,7 +269,20 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+
+    val parts = description.split(";")
+    val mapOfGoods: MutableMap<String, Double> = mutableMapOf()
+
+    for (part in parts) {
+        val goods = part.split(" ")
+        if (goods.size !=2) {
+            return  ""
+        }
+        mapOfGoods.put(goods.get(0), goods.get(1).toDouble())
+    }
+    return mapOfGoods.filter { it.value == mapOfGoods.values.maxBy { it }}.keys.first()
+}
 
 /**
  * Сложная
