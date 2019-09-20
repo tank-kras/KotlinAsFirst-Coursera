@@ -246,14 +246,14 @@ fun firstDuplicateIndex(str: String): Int {
     var count = parts.size
     var result = ""
 
-    while (count > 0){
+    while (count > 0) {
 
-        val cur_word = parts.get(parts.size-count) + if (count == 1) "" else " "
+        val cur_word = parts.get(parts.size - count) + if (count == 1) "" else " "
         val cur_word2 = cur_word + cur_word
 
         if ((result + cur_word2) in str_lowercase) return str_lowercase.indexOf(cur_word2)
         result += cur_word
-        count -=1
+        count -= 1
     }
     return -1
 }
@@ -275,13 +275,13 @@ fun mostExpensive(description: String): String {
     val mapOfGoods: MutableMap<String, Double> = mutableMapOf()
 
     for (part in parts) {
-        val goods = part.split(" ")
-        if (goods.size !=2) {
-            return  ""
+        val goods = part.trim().split(" ")
+        if (goods.size != 2) {
+            return ""
         }
         mapOfGoods.put(goods.get(0), goods.get(1).toDouble())
     }
-    return mapOfGoods.filter { it.value == mapOfGoods.values.maxBy { it }}.keys.first()
+    return mapOfGoods.filter { it -> it.value == mapOfGoods.values.maxBy { it } }.keys.first()
 }
 
 /**
@@ -295,12 +295,43 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+
+    var result = 0
+    var new_roman = roman
+    val mapOfRoman: Map<String, Int> = mapOf("I" to 1, "IV" to 4, "V" to 5, "IX" to 9, "X" to 10, "XL" to 40, "L" to 50,
+            "XC" to 90, "C" to 100, "CD" to 400, "D" to 500, "CM" to 900, "M" to 1000)
+    val listOfRoman = mapOfRoman.keys.toList()
+
+    while (new_roman != "") {
+        if (new_roman == "") return break
+
+        var was_replace = false
+        for (a in 0..listOfRoman.size - 1) {
+            val romanDig = listOfRoman.get(listOfRoman.size - 1 - a)
+            if (new_roman.startsWith(romanDig)) {
+                result += mapOfRoman.get(romanDig)!!
+                new_roman = new_roman.replaceFirst(romanDig, "")
+                was_replace = true
+                break
+
+            }
+        }
+
+        if (!was_replace) { return -1}
+
+    }
+
+    //MCMLXXVIII
+    //DCXCIV
+    //XLIX
+    return result
+}
 
 /**
  * Очень сложная
  *
- * Имеется специальное устройство, представляющее собой
+ * Имеется специальное устройство, представляющее собо
  * конвейер из cells ячеек (нумеруются от 0 до cells - 1 слева направо) и датчик, двигающийся над этим конвейером.
  * Строка commands содержит последовательность команд, выполняемых данным устройством, например +>+>+>+>+
  * Каждая команда кодируется одним специальным символом:
