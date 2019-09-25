@@ -314,17 +314,11 @@ fun fromRoman(roman: String): Int {
                 new_roman = new_roman.replaceFirst(romanDig, "")
                 was_replace = true
                 break
-
             }
         }
-
         if (!was_replace) { return -1}
-
     }
 
-    //MCMLXXVIII
-    //DCXCIV
-    //XLIX
     return result
 }
 
