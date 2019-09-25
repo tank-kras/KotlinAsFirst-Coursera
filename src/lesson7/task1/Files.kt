@@ -94,7 +94,38 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+
+    val mapWords: Map<Char, Char> = mapOf('Ы' to 'И', 'Я' to 'А', 'Ю' to 'У', 'ы' to 'и', 'я' to 'а', 'ю' to 'у')
+    val reg = Regex("""[ЖжЧчШшЩщ][ЫыЯяЮю]""")
+    val outputStream = File(outputName).bufferedWriter()
+    var t = 0
+
+    for (line in File(inputName).readLines()) {
+
+        var newLine = line
+        if (line.contains(reg)) {
+            val matchResult = reg.findAll(line)
+            for (a in matchResult){
+                for (b in a.groups){
+                    for (c in mapWords){
+                        if (b!=null && b.value.contains(c.key)){
+                            val s = b.value.replace(c.key, c.value)
+
+                            newLine = newLine.replaceFirst(reg, s)
+                            //print("old line: $line, new line: $newLine")
+                        }
+                    }
+
+                }
+
+            }
+        }
+        if (t !=0) outputStream.newLine()
+
+        outputStream.write(newLine)
+        t+=1
+    }
+    outputStream.close()
 }
 
 /**
